@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import enum
-from datetime import datetime
-from typing import Any, Callable, Optional, Union
+from datetime import datetime, timezone
+from typing import Any, Optional
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 
 
 class Severity(str, enum.Enum):
@@ -61,7 +61,7 @@ class AttackResult(BaseModel):
     severity: Severity
     confidence: float = Field(ge=0.0, le=1.0)
     details: str = ""
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = {"arbitrary_types_allowed": True}
 

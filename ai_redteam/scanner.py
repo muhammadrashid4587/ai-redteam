@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 
 from ai_redteam.attacks import ATTACK_REGISTRY
@@ -137,7 +137,7 @@ class Scanner:
         report = ScanReport(
             target=target_label,
             suites_run=self.suites,
-            started_at=datetime.utcnow(),
+            started_at=datetime.now(timezone.utc),
         )
 
         all_results: list[AttackResult] = []
@@ -156,7 +156,7 @@ class Scanner:
         report.results = all_results
         report.total_attacks = len(all_results)
         report.successful_attacks = sum(1 for r in all_results if r.success)
-        report.finished_at = datetime.utcnow()
+        report.finished_at = datetime.now(timezone.utc)
         report.summary = {
             "severity_breakdown": report.severity_breakdown(),
             "category_breakdown": report.category_breakdown(),
