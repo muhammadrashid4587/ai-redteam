@@ -57,7 +57,10 @@ class Attack(abc.ABC):
                 timeout=self.target.timeout,
             )
             resp.raise_for_status()
-            data = resp.json()
+            try:
+                data = resp.json()
+            except ValueError:
+                return resp.text
             return str(data.get(self.target.response_field, data))
         except Exception as exc:
             logger.warning("HTTP request failed for payload (%.40s...): %s", payload, exc)
